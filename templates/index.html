@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Diwali Ecubix Family</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #ff9900; /* Diwali-themed color */
+            margin-bottom: 20px;
+        }
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ff9900;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #ff9900; /* Diwali-themed button color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #cc7a00; /* Darker shade on hover */
+        }
+        audio {
+            display: none; /* Keep audio controls hidden */
+        }
+        @media (max-width: 600px) {
+            input[type="text"] {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        function generateSpeech(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const name = document.getElementById('name').value;
+            const defaultText = document.getElementById('default_text').value;
+
+            fetch('/generate_speech', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'name': name,
+                    'default_text': defaultText
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const audio = document.getElementById('audio');
+                audio.src = data.audio_url;
+                audio.play(); // Automatically play the audio
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Happy Diwali Ecubix Family</h1>
+
+    <!-- Video Display -->
+    <video autoplay muted controls>
+        <source src="{{ url_for('static', filename='8627312-hd_1920_1080_30fps.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- User Input for Name -->
+    <form onsubmit="generateSpeech(event)">
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" name="name" placeholder="Your Name" required>
+        
+        <!-- Pass default text as a hidden field -->
+        <input type="hidden" id="default_text" value="{{ default_gujarati_text }}">
+        
+        <button type="submit">Generate Speech</button>
+    </form>
+
+    <!-- Audio element for playback -->
+    <audio id="audio" controls></audio>
+</body>
+</html>
